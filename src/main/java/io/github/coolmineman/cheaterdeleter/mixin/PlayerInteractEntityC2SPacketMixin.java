@@ -17,6 +17,7 @@ import net.minecraft.server.world.ServerWorld;
 public class PlayerInteractEntityC2SPacketMixin implements PlayerInteractEntityC2SPacketView {
     private PlayerInteractEntityC2SPacketView.InteractType type;
 
+    @SuppressWarnings("InvalidInjectorMethodSignature")
     @Inject(method = "<init>(Lnet/minecraft/network/PacketByteBuf;)V", at = @At("RETURN"), locals = LocalCapture.CAPTURE_FAILHARD)
     private void iHateThisHack(PacketByteBuf buf, CallbackInfo bruh, @Coerce Enum interactType) {
         type = PlayerInteractEntityC2SPacketView.InteractType.ALL[interactType.ordinal()];

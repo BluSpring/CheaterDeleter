@@ -9,7 +9,7 @@ import io.github.coolmineman.cheaterdeleter.events.PacketCallback;
 import io.github.coolmineman.cheaterdeleter.objects.entity.CDPlayer;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ServerPlayPacketListener;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 
 public class CheaterDeleterThread extends Thread {
     public static final CheaterDeleterThread INSTANCE = new CheaterDeleterThread();
@@ -29,7 +29,7 @@ public class CheaterDeleterThread extends Thread {
                     PacketCallback.EVENT.invoker().onPacket(packetContext.getFirst(), packetContext.getSecond());
                 } catch (Throwable t) {
                    t.printStackTrace();
-                   packetContext.getFirst().kick(new LiteralText("Crashed AntiCheat"));
+                   packetContext.getFirst().kick(Text.literal("Crashed AntiCheat"));
                 }
             }
         }

@@ -1,5 +1,6 @@
 package io.github.coolmineman.cheaterdeleter.trackers;
 
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import io.github.coolmineman.cheaterdeleter.events.PacketCallback;
@@ -14,7 +15,6 @@ import io.github.coolmineman.cheaterdeleter.trackers.data.PlayerMoveData;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.packet.c2s.play.TeleportConfirmC2SPacket;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 
 public class PlayerMoveTracker extends Tracker<PlayerMoveData> implements PacketCallback {
@@ -34,7 +34,7 @@ public class PlayerMoveTracker extends Tracker<PlayerMoveData> implements Packet
         PlayerMoveData teleportConfirmData = get(player);
         if (packet instanceof TeleportConfirmC2SPacket) {
             teleportConfirmData.teleportConfirmC2SPacket = (TeleportConfirmC2SPacket)packet;
-            if (teleportConfirmData.lastWasTeleportConfirm) player.kick(new LiteralText("Illegal TeleportConfirmC2SPacket"));
+            if (teleportConfirmData.lastWasTeleportConfirm) player.kick(Text.literal("Illegal TeleportConfirmC2SPacket"));
             checkTeleportConfirmId(player, teleportConfirmData, teleportConfirmData.teleportConfirmC2SPacket.getTeleportId());
             teleportConfirmData.lastWasTeleportConfirm = true;
         } else {
@@ -48,10 +48,10 @@ public class PlayerMoveTracker extends Tracker<PlayerMoveData> implements Packet
                         teleportConfirmData.lastWasTeleportConfirm = false;
                         return ActionResult.PASS;
                     } else {
-                        player.kick(new LiteralText("Expected PlayerMoveC2SPacket.Both After TeleportConfirmC2SPacket"));
+                        player.kick(Text.literal("Expected PlayerMoveC2SPacket.Both After TeleportConfirmC2SPacket"));
                     }
                 } else {
-                    player.kick(new LiteralText("Expected PlayerMoveC2SPacket After TeleportConfirmC2SPacket"));
+                    player.kick(Text.literal("Expected PlayerMoveC2SPacket After TeleportConfirmC2SPacket"));
                 }
             } else if (packet instanceof PlayerMoveC2SPacketView) {
                 PlayerMoveC2SPacketView playerMoveC2SPacketView = (PlayerMoveC2SPacketView)packet;
@@ -66,10 +66,10 @@ public class PlayerMoveTracker extends Tracker<PlayerMoveData> implements Packet
     private void checkTeleportConfirmId(CDPlayer player, PlayerMoveData data, int id) {
         int max = ((ServerPlayNetworkHandlerAccessor)player.getNetworkHandler()).getRequestedTeleportId();
         if (id > max && max > data.expectedTeleportId) {
-            player.kick(new LiteralText("Illegal TeleportConfirmC2SPacket 3"));
+            player.kick(Text.literal("Illegal TeleportConfirmC2SPacket 3"));
         }
         if (id < 0) {
-            player.kick(new LiteralText("Illegal TeleportConfirmC2SPacket 4"));
+            player.kick(Text.literal("Illegal TeleportConfirmC2SPacket 4"));
         }
         if (++data.expectedTeleportId == Integer.MAX_VALUE) {
             data.expectedTeleportId = 0;

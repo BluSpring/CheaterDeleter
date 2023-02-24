@@ -1,6 +1,6 @@
 package io.github.coolmineman.cheaterdeleter.objects.entity;
 
-import net.minecraft.entity.passive.HorseBaseEntity;
+import net.minecraft.entity.passive.AbstractHorseEntity;
 
 public interface CDHorseBaseEntity extends CDEntity {
 
@@ -9,11 +9,11 @@ public interface CDHorseBaseEntity extends CDEntity {
         return (asMcHorseBaseEntity().getJumpStrength() * 4); //What is this
     }
     
-    default HorseBaseEntity asMcHorseBaseEntity() {
-        return (HorseBaseEntity)this;
+    default AbstractHorseEntity asMcHorseBaseEntity() {
+        return (AbstractHorseEntity) this;
     }
 
-    public static CDPlayer of(HorseBaseEntity mcPlayer) {
+    public static CDPlayer of(AbstractHorseEntity mcPlayer) {
         return ((CDPlayer)mcPlayer);
     }
 }

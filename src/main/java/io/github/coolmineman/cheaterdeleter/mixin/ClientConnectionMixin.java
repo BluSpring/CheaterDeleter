@@ -2,6 +2,7 @@ package io.github.coolmineman.cheaterdeleter.mixin;
 
 import com.mojang.datafixers.util.Pair;
 
+import net.minecraft.network.PacketCallbacks;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ public class ClientConnectionMixin {
     @Final
     private static Logger LOGGER;
 
-    @Inject(method = "channelRead0", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V", at = @At("HEAD"), cancellable = true)
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, Packet packet, CallbackInfo cb) {
         if (packetListener instanceof ServerPlayNetworkHandler) {
             CheaterDeleterThread.PACKET_QUEUE.add(new Pair<>(CDPlayer.of(((ServerPlayNetworkHandler)packetListener).player), packet));
@@ -39,7 +40,7 @@ public class ClientConnectionMixin {
     }
 
     @Inject(method = "sendImmediately", at = @At("HEAD"))
-    private void sendImmediately(Packet packet, @Nullable GenericFutureListener<? extends Future<? super Void>> callback, CallbackInfo cb) {
+    private void sendImmediately(Packet packet, PacketCallbacks callbacks, CallbackInfo ci) {
         if (packetListener instanceof ServerPlayNetworkHandler) {
             OutgoingPacketListener.EVENT.invoker().onOutgoingPacket(CDPlayer.of(((ServerPlayNetworkHandler)packetListener).player), packet);
         }

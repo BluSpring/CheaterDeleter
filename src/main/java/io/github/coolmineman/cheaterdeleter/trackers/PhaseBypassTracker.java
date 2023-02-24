@@ -57,7 +57,7 @@ public class PhaseBypassTracker extends Tracker<PhaseBypassData> implements SetB
         List<ServerPlayerEntity> players = world.getPlayers();
         for (ServerPlayerEntity player1 : players) {
             CDPlayer player = CDPlayer.of(player1);
-            if (pos.getSquaredDistance(player.getX(), player.getY(), player.getZ(), true) < getMaxBypassDistanceSquared(player)) {
+            if (pos.getSquaredDistance(player.getX(), player.getY(), player.getZ()) < getMaxBypassDistanceSquared(player)) {
                 PhaseBypassData data = get(player);
                 synchronized(data.bypassPos) {
                     data.bypassPos.add(pos.asLong());

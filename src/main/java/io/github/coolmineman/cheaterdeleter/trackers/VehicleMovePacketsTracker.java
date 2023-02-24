@@ -1,5 +1,6 @@
 package io.github.coolmineman.cheaterdeleter.trackers;
 
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.NotNull;
 
 import io.github.coolmineman.cheaterdeleter.events.OutgoingPacketListener;
@@ -16,7 +17,6 @@ import net.minecraft.network.listener.ServerPlayPacketListener;
 import net.minecraft.network.packet.c2s.play.PlayerInputC2SPacket;
 import net.minecraft.network.packet.c2s.play.VehicleMoveC2SPacket;
 import net.minecraft.network.packet.s2c.play.VehicleMoveS2CPacket;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.ActionResult;
 
 public class VehicleMovePacketsTracker extends Tracker<VehicleMovePacketsData> implements PacketCallback, OutgoingPacketListener {
@@ -48,7 +48,7 @@ public class VehicleMovePacketsTracker extends Tracker<VehicleMovePacketsData> i
                 data.magic = 1;
                 data.playerInput = playerInput;
             } else {
-                player.kick(new LiteralText("Illegal PlayerInputC2SPacket"));
+                player.kick(Text.literal("Illegal PlayerInputC2SPacket"));
             }
         } else if (packet instanceof VehicleMoveC2SPacket) {
             VehicleMoveC2SPacket vehicleMove = (VehicleMoveC2SPacket) packet;
@@ -62,7 +62,7 @@ public class VehicleMovePacketsTracker extends Tracker<VehicleMovePacketsData> i
                 data.playerLook = null;
             } else {
                 if (!(data.lastVehicleMoveS2CPacket != null && (System.currentTimeMillis() - data.lastVehicleMoveS2CPacketTime < 30000) && areEqual(data.lastVehicleMoveS2CPacket, vehicleMove)))
-                    player.kick(new LiteralText("Illegal VehicleMoveC2SPacket"));
+                    player.kick(Text.literal("Illegal VehicleMoveC2SPacket"));
             }
         } else {
             data.magic = -1;

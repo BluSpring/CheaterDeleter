@@ -68,7 +68,7 @@ public class MathUtil {
                 cameraPos,
                 endPos,
                 box,
-                entityx -> !entityx.isSpectator() && entityx.collides(),
+                entityx -> !entityx.isSpectator() && entityx.isCollidable(),
                 extendedReach
         );
 

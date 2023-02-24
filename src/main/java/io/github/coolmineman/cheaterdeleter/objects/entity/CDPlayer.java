@@ -13,15 +13,12 @@ import io.github.coolmineman.cheaterdeleter.modules.CDModule;
 import io.github.coolmineman.cheaterdeleter.objects.PlayerMoveC2SPacketView;
 import io.github.coolmineman.cheaterdeleter.config.GlobalConfig;
 import net.fabricmc.fabric.api.util.TriState;
-import net.minecraft.network.MessageType;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.BannedPlayerEntry;
 import net.minecraft.server.BannedPlayerList;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Util;
 
 public interface CDPlayer extends CDEntity {
@@ -49,7 +46,7 @@ public interface CDPlayer extends CDEntity {
         ex.flags += amount;
         ex.lastFlag = System.currentTimeMillis();
         if (ex.flags > 16) {
-            kick(new LiteralText("Flagged Too Much by AC"));
+            kick(Text.literal("Flagged Too Much by AC"));
         }
     }
 
@@ -199,7 +196,7 @@ public interface CDPlayer extends CDEntity {
 
     default void kick(Text text) {
         if (GlobalConfig.getDebugMode() >= 2) {
-            asMcPlayer().sendMessage(new LiteralText("Kicked: ").append(text), MessageType.SYSTEM, Util.NIL_UUID);
+            asMcPlayer().sendMessageToClient(Text.literal("Kicked: ").append(text), false);
             CDPlayerEx ex = getData(CDPlayerEx.class);
             ex.flags = 0;
         } else {
@@ -209,7 +206,7 @@ public interface CDPlayer extends CDEntity {
 
     default void ban(int hours, String reason) {
         if (GlobalConfig.getDebugMode() >= 2) {
-            asMcPlayer().sendMessage(new LiteralText("Banned: " + reason), MessageType.SYSTEM, Util.NIL_UUID);
+            asMcPlayer().sendMessageToClient(Text.literal("Banned: " + reason), false);
             CDPlayerEx ex = getData(CDPlayerEx.class);
             ex.flags = 0;
         } else {
@@ -224,7 +221,7 @@ public interface CDPlayer extends CDEntity {
             }
 
             bannedPlayerList.add(entry);
-            asMcPlayer().networkHandler.disconnect(new TranslatableText("multiplayer.disconnect.banned"));
+            asMcPlayer().networkHandler.disconnect(Text.translatable("multiplayer.disconnect.banned"));
         }
     }
 
@@ -237,7 +234,7 @@ public interface CDPlayer extends CDEntity {
     }
 
     default String asString() {
-        return String.format(Locale.ROOT, "Player['%s'/%s, w='%s', x=%.2f, y=%.2f, z=%.2f]", asMcPlayer().getName().asString(), this.getUuid().toString(), this.getWorld() == null ? "~NULL~" : this.getWorld().getRegistryKey().getValue().toString(), this.getX(), this.getY(), this.getZ());
+        return String.format(Locale.ROOT, "Player['%s'/%s, w='%s', x=%.2f, y=%.2f, z=%.2f]", asMcPlayer().getName().getString(), this.getUuid().toString(), this.getWorld() == null ? "~NULL~" : this.getWorld().getRegistryKey().getValue().toString(), this.getX(), this.getY(), this.getZ());
     }
 
     default ServerPlayerEntity asMcPlayer() {
